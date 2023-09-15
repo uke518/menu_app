@@ -9,20 +9,23 @@ OPEN_AI_API_KEY = os.environ['OPEN_AI_API_KEY']
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    meal_type = request.form.get('meal_type')
-    dish_num = request.form.get('dish_num', 3)
-    tastes = request.form.get('tastes', ['辛い'])
-    main_dish = request.form.get('main_dish', '肉')
-    preference = request.form.get('preference', 'ニンジンを使いたい')
+    if request.method == 'GET':
+        return '<h1>Hello World</h1>'
+    else:
+        meal_type = request.form.get('meal_type')
+        dish_num = request.form.get('dish_num', 3)
+        tastes = request.form.get('tastes', ['辛い'])
+        main_dish = request.form.get('main_dish', '肉')
+        preference = request.form.get('preference', 'ニンジンを使いたい')
 
-    dish_list = make_dish_list(meal_type, dish_num, tastes, main_dish, preference)
-    descriptions = make_descriptions(dish_list)
-    response = []
-    for dish, description in zip(dish_list, descriptions):
-        response.append({"title": dish, "description": description})
-    return response
+        dish_list = make_dish_list(meal_type, dish_num, tastes, main_dish, preference)
+        descriptions = make_descriptions(dish_list)
+        response = []
+        for dish, description in zip(dish_list, descriptions):
+            response.append({"title": dish, "description": description})
+        return response
 
 
 def make_dish_list(meal_type, dish_num, tastes, main_dish, preference):
