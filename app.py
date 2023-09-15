@@ -3,7 +3,7 @@ import openai
 import unicodedata
 import os
 
-OPEN_AI_API_KEY = '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'
+OPEN_AI_API_KEY = os.environ['OPEN_AI_API_KEY']
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
