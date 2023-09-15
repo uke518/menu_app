@@ -1,10 +1,12 @@
 from flask import Flask, request
 import openai
 import unicodedata
+from dotenv import load_dotenv
+import os
 
-OPEN_AI_API_KEY = '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'
+load_dotenv(dotenv_path=".local.env")
+OPEN_AI_API_KEY = os.environ['OPEN_AI_API_KEY']
 app = Flask(__name__)
-app.json.ensure_ascii = False
 
 @app.route('/', methods=['POST'])
 def index():
