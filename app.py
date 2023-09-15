@@ -1,10 +1,8 @@
 from flask import Flask, request
 import openai
 import unicodedata
-from dotenv import load_dotenv
 import os
 
-load_dotenv(dotenv_path=".local.env")
 OPEN_AI_API_KEY = os.environ['OPEN_AI_API_KEY']
 app = Flask(__name__)
 app.json.ensure_ascii = False
