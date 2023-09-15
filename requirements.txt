@@ -1,3 +1,4 @@
 openai==0.27.4
 flask==2.2.5
 flask-sqlalchemy==3.0.5
+gunicorn==19.7.1
