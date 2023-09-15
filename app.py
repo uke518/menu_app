@@ -7,6 +7,7 @@ import os
 load_dotenv(dotenv_path=".local.env")
 OPEN_AI_API_KEY = os.environ['OPEN_AI_API_KEY']
 app = Flask(__name__)
+app.json.ensure_ascii = False
 
 @app.route('/', methods=['POST'])
 def index():
@@ -25,7 +26,7 @@ def index():
 
 
 def make_dish_list(meal_type, dish_num, tastes, main_dish, preference):
-    question = f"以下の条件で健康バランスの良い{meal_type}の献立を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで\n。## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n料理名2：〇〇\n料理名3：〇〇..."
+    question = f"以下の条件で健康バランスの良い{meal_type}の献立を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで\n。## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n料理名2：〇〇\n料理名3：〇〇\n..."
     menu_text = ask_gpt(question)
     dish_list = []
     for line in menu_text.split("\n"):
