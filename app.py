@@ -5,16 +5,13 @@ OPEN_AI_API_KEY = ''
 app = Flask(__name__)
 app.json.ensure_ascii = False
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['POST'])
 def index():
-    if request.method == 'GET':
-        return ask_gpt(1, 1, 1, 1, 1)
-    else:
-        meal_type = request.form.get('meal_type')
-        dish_num = request.form.get('dish_num')
-        tastes = request.form.get('tastes')
-        main_dish = request.form.get('main_dish')
-        preference = request.form.get('preference')
+    meal_type = request.form.get('meal_type')
+    dish_num = request.form.get('dish_num')
+    tastes = request.form.get('tastes')
+    main_dish = request.form.get('main_dish')
+    preference = request.form.get('preference')
 
     question = make_question(meal_type, dish_num, tastes, main_dish, preference)
     gpt_answer = ask_gpt(question)
