@@ -19,6 +19,7 @@ def index():
         preference = request.form.get('preference', 'ニンジンを使いたい')
 
         dish_list = make_dish_list(meal_type, dish_num, tastes, main_dish, preference)
+        print(dish_list)
         descriptions = make_descriptions(dish_list)
         response = []
         for dish, description in zip(dish_list, descriptions):
@@ -46,6 +47,7 @@ def make_descriptions(dish_list):
     for dish in dish_list:
         question = f"{dish}の原材料と料理手順を教えて。出力はフォーマットに則って、それ以外の言葉は喋らないで。n## フォーマット\n原材料：〇〇\n手順：〇〇"
         description = ask_gpt(question)
+        print(description)
         descriptions.append(description)
     print(descriptions)
     return descriptions
