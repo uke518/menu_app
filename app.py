@@ -29,7 +29,7 @@ def index():
 
 
 def make_dish_list(meal_type, dish_num, tastes, main_dish, preference):
-    question = f"以下の条件で健康バランスの良い{meal_type}の献立を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで\n。## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n料理名2：〇〇\n料理名3：〇〇\n..."
+    question = f"以下の条件で健康バランスの良い{meal_type}の献立を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで\n。## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n料理名2：〇〇\n料理名3：〇〇\n..."
     menu_text = ask_gpt(question)
     dish_list = []
     for line in menu_text.split("\n"):
@@ -46,7 +46,7 @@ def make_dish_list(meal_type, dish_num, tastes, main_dish, preference):
 def make_descriptions(dish_list):
     descriptions = []
     for dish in dish_list:
-        question = f"{dish}の原材料と料理手順を教えて。出力はフォーマットに則って、それ以外の言葉は喋らないで。n## フォーマット\n原材料：〇〇\n手順：〇〇"
+        question = f"{dish}の原材料と料理手順を教えて。出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで。\n## フォーマット\n原材料：〇〇\n手順：〇〇"
         description = ask_gpt(question)
         print(description)
         descriptions.append(description)
@@ -56,7 +56,7 @@ def make_descriptions(dish_list):
 def ask_gpt(question):
     openai.api_key = OPEN_AI_API_KEY
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=[
             {"role": "user", "content": 'あなたは日本人のユーザーから食べたいものや好みを聞いて1食分の献立を教えるアプリです'},
             {"role": "assistant",
