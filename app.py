@@ -12,11 +12,12 @@ def index():
     if request.method == 'GET':
         return '<h1>Hello World</h1>'
     else:
-        meal_type = request.form.get('meal_type')
+        meal_type = request.form.get('meal_type', '朝食')
         dish_num = request.form.get('dish_num', 3)
         tastes = request.form.get('tastes', ['辛い'])
         main_dish = request.form.get('main_dish', '肉')
         preference = request.form.get('preference', 'ニンジンを使いたい')
+        print(meal_type, dish_num, tastes, main_dish, preference)
 
         dish_list = make_dish_list(meal_type, dish_num, tastes, main_dish, preference)
         print(dish_list)
@@ -49,7 +50,6 @@ def make_descriptions(dish_list):
         description = ask_gpt(question)
         print(description)
         descriptions.append(description)
-    print(descriptions)
     return descriptions
 
 
