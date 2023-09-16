@@ -24,12 +24,14 @@ def index():
 
 
 def make_response(meal_type, dish_num, tastes, main_dish, preference):
-    question = f"以下の条件で健康バランスの良い{meal_type}の献立とその原材料・料理手順を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで。\n## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n原材料：〇〇\n手順：〇〇\n料理名2：〇〇\n原材料：〇〇\n手順：〇〇\n..."
+    question = f"以下の条件で健康バランスの良い{meal_type}の献立とその原材料・料理手順を提案してください。また出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで。\n## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n原材料：〇〇\n手順：〇〇\n料理名2：〇〇\n原材料：〇〇\n手順：〇〇\n"
     menu_text = ask_gpt(question)
     print("menu_text:", menu_text)
     response = []
     for line in menu_text.split("料理名"):
-        if (line == "") or (not line[0].isdigit()):
+        if (line == ""):
+            continue
+        if (line[0] != ":") and (not line[0].isdigit()):
             continue
         try:
             line = line.split(':', 1)[1]
@@ -48,9 +50,9 @@ def ask_gpt(question):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "user", "content": 'あなたは日本人のユーザーから食べたいものや好みを聞いて1食分の献立を教えるアプリです'},
+            {"role": "user", "content": 'あなたは日本人のユーザーから食べたいものや好みを聞いて1食分の献立とその原材料・料理手順を教えるアプリです'},
             {"role": "assistant",
-                "content": '了解しました。私はそのようなリクエストを処理できるようになります。ユーザーが食べたいものや好みを教えてくれたら、それに基づいて献立を提案できます。では、お気軽に食べたいものや好みを教えてください！'},
+                "content": '了解しました。私はそのようなリクエストを処理できるようになります。ユーザーが食べたいものや好みを教えてくれたら、それに基づいて献立とその原材料・料理手順を提案できます。では、お気軽に食べたいものや好みを教えてください！'},
             {'role': 'user', 'content': question}
         ],
     )
