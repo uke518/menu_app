@@ -2,9 +2,14 @@ from flask import Flask, request
 import openai
 import unicodedata
 import os
+from flask_cors import CORS
 
 OPEN_AI_API_KEY = os.environ['OPEN_AI_API_KEY']
 app = Flask(__name__)
+CORS(
+    app,
+    supports_credentials=True
+)
 app.json.ensure_ascii = False
 
 @app.route('/', methods=['GET', 'POST'])
