@@ -19,44 +19,32 @@ def index():
         preference = request.form.get('preference', 'ニンジンを使いたい')
         print(meal_type, dish_num, tastes, main_dish, preference)
 
-        dish_list = make_dish_list(meal_type, dish_num, tastes, main_dish, preference)
-        print(dish_list)
-        descriptions = make_descriptions(dish_list)
-        response = []
-        for dish, description in zip(dish_list, descriptions):
-            response.append({"title": dish, "description": description})
+        response = make_response(meal_type, dish_num, tastes, main_dish, preference)
         return response
 
 
-def make_dish_list(meal_type, dish_num, tastes, main_dish, preference):
-    question = f"以下の条件で健康バランスの良い{meal_type}の献立を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで\n。## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n料理名2：〇〇\n料理名3：〇〇\n..."
+def make_response(meal_type, dish_num, tastes, main_dish, preference):
+    question = f"以下の条件で健康バランスの良い{meal_type}の献立とその原材料・料理手順を提案してください。。また出力はフォーマットに則って、それ以外の言葉は喋らないで。以下の条件で朝食の献立を考えてください。また出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで。\n## 条件\n品数： {dish_num}\n味の好み： {tastes}\nメイン： {main_dish}\nその他要望： {preference}\n\n## フォーマット\n料理名1：〇〇\n原材料：〇〇\n手順：〇〇\n料理名2：〇〇\n原材料：〇〇\n手順：〇〇\n..."
     menu_text = ask_gpt(question)
-    dish_list = []
-    for line in menu_text.split("\n"):
+    response = []
+    for line in menu_text.split("料理名"):
+        if (line == "") or (not line[0].isdigit()):
+            continue
         try:
-            print(line.split(":"))
-            if '料理名' in line.split(":")[0]:
-                dish_list.append(line.split(":")[1])
-        except BaseException:
+            line = line.split(':', 1)[1]
+            splited_line = line.split("原材料:")
+            splited_line[1] = "原材料：" + splited_line[1]
+            response.append({"title": splited_line[0].replace(" ", "").replace("\n", ""), "description": splited_line[1]})
+        except BaseException as e:
+            print(e)
             break
-    dish_list = [dish.strip() for dish in dish_list]
-    return dish_list
-
-
-def make_descriptions(dish_list):
-    descriptions = []
-    for dish in dish_list:
-        question = f"{dish}の原材料と料理手順を教えて。出力はフォーマットに則って、それ以外の言葉は喋らないで。'フォーマット'の部分は返答には入れないで。\n## フォーマット\n原材料：〇〇\n手順：〇〇"
-        description = ask_gpt(question)
-        print(description)
-        descriptions.append(description)
-    return descriptions
+    return response
 
 
 def ask_gpt(question):
     openai.api_key = OPEN_AI_API_KEY
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "user", "content": 'あなたは日本人のユーザーから食べたいものや好みを聞いて1食分の献立を教えるアプリです'},
             {"role": "assistant",
