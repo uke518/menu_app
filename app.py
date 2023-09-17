@@ -17,11 +17,19 @@ def index():
     if request.method == 'GET':
         return '<h1>Hello World</h1>'
     else:
+        print('request', request)
+        print('request.form', request.form)
         meal_type = request.form.get('meal_type', '朝食')
         dish_num = request.form.get('dish_num', 3)
         tastes = request.form.get('tastes', ['辛い'])
         main_dish = request.form.get('main_dish', '肉')
         preference = request.form.get('preference', 'ニンジンを使いたい')
+        # request_data = request.get_data()
+        # meal_type = request_data.get('meal_type', '朝食')
+        # dish_num = request_data.get('dish_num', 3)
+        # tastes = request_data.get('tastes', ['辛い'])
+        # main_dish = request_data.get('main_dish', '肉')
+        # preference = request_data.get('preference', 'ニンジンを使いたい')
         print(meal_type, dish_num, tastes, main_dish, preference)
 
         response = make_response(meal_type, dish_num, tastes, main_dish, preference)
