@@ -17,8 +17,12 @@ def index():
     if request.method == 'GET':
         return '<h1>Hello World</h1>'
     else:
-        print('request', request)
-        print('request.form', request.form)
+        try:
+            print('request', request)
+            print('request.form', request.form)
+            print('request_formのkey', request.form.keys())
+        except BaseException:
+            print('print失敗')
         meal_type = request.form.get('meal_type', '朝食')
         dish_num = request.form.get('dish_num', 3)
         tastes = request.form.get('tastes', ['辛い'])
